@@ -9,6 +9,6 @@ export const styles = StyleSheet.create({
   },
   errorMessage: {
     fontSize: 24,
-    color: Colors.primary,
+    color: Colors.white,
   },
 });
