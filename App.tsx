@@ -5,23 +5,40 @@
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { StatusBar, StyleSheet } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { AppNavigator } from './src/navigators/AppNavigator';
+import { Provider } from 'react-redux';
+import { persistor, store } from './src/redux/Store';
+import { PersistGate } from 'redux-persist/integration/react';
+import Colors from './src/common/Style/Colors';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
+    <NavigationContainer>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <SafeAreaProvider>
+            <SafeAreaView style={styles.container}>
+              <StatusBar
+                backgroundColor="#ffcc00" // set your desired color
+                translucent
+                barStyle="dark-content" // or "light-content"
+              />
+              <AppNavigator />
+            </SafeAreaView>
+          </SafeAreaProvider>
+        </PersistGate>
+      </Provider>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.secondary,
   },
 });
 
