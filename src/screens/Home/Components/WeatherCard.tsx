@@ -6,7 +6,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/Store';
 
 export const WeatherCard: React.FC = () => {
-  const { weatherDetail } = useSelector((state: RootState) => state.weather);
+  const weatherDetail = useSelector(
+    (state: RootState) => state.weather.weatherDetail,
+  );
 
   if (!weatherDetail) {
     return null;
@@ -27,6 +29,3 @@ export const WeatherCard: React.FC = () => {
     </View>
   );
 };
-function useAppSelector(loggedInUser: any) {
-  throw new Error('Function not implemented.');
-}

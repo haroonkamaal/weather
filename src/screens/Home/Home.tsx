@@ -11,13 +11,26 @@ import {
   setcityWeatherDetails,
   setWeatherErrorStatusAction,
 } from '../../redux/Actions/WeatherAction';
+import { fibboci, occurence } from '../../utils/utils';
+import { useSelector } from 'react-redux';
+import { weatherDetailsSelector } from '../../redux/Reducer/WeatherSlice';
+import { RootState } from '../../redux/Store';
 
 export const Home: React.FC = () => {
   const { fetchWeather, loading, errorMessage, isError, weatherInfo } =
     useWeatherDetails();
 
+  const searchedCity = useSelector(
+    (state: RootState) => state.weather?.weatherDetail?.name ?? '',
+  );
+
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
-  const currentCity = useRef<string>('');
+
+  const currentCity = useRef<string>(searchedCity);
+
+  const weatherDetail = useSelector(
+    weatherDetailsSelector(currentCity.current ?? ''),
+  );
 
   const toggleSearchBar = useCallback(() => {
     setShowSearchBar(prev => {
@@ -30,8 +43,14 @@ export const Home: React.FC = () => {
   }, []);
 
   const getWeatherDetails = useCallback(() => {
-    fetchWeather(currentCity.current);
-  }, [fetchWeather]);
+    if (
+      !weatherDetail ||
+      (weatherDetail && weatherDetail.name !== currentCity.current)
+    ) {
+      console.log('called api');
+      fetchWeather(currentCity.current);
+    }
+  }, [fetchWeather, weatherDetail]);
 
   useEffect(() => {
     if (weatherInfo) {
@@ -44,6 +63,11 @@ export const Home: React.FC = () => {
     setWeatherErrorStatusAction(errorMessage);
   }, [errorMessage]);
 
+  useEffect(() => {
+    // occurence(['a', 'a', 'd', 'c', 'd', 'g', 'd', 'c', 'b', 'g', 'b', 'f']);
+    // fibboci(8);
+  }, []);
+
   return (
     <Screen
       showSearch={true}
@@ -55,6 +79,7 @@ export const Home: React.FC = () => {
         <SearchBar
           onGetWeatherClick={getWeatherDetails}
           onChangeCity={getCurrentCity}
+          searchedQuery={currentCity.current}
         />
       )}
       {!loading && !isError && (

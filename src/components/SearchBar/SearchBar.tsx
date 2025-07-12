@@ -6,15 +6,18 @@ import { Icons } from '../../assets';
 interface Props {
   onChangeCity: (city: string) => void;
   onGetWeatherClick: () => void;
+  searchedQuery?: string;
 }
 
 export const SearchBar: React.FC<Props> = ({
   onChangeCity,
   onGetWeatherClick,
+  searchedQuery = '',
 }) => {
   return (
     <View style={styles.container}>
       <TextInput
+        defaultValue={searchedQuery}
         style={styles.searchInput}
         placeholder="Search city"
         onChangeText={onChangeCity}

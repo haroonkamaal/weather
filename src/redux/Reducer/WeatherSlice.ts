@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Weather } from '../Type';
 import { WeatherResponseDto } from '../../model/Dto/WeatherResponseDto';
+import { RootState } from '../Store';
 
 const initialState: Weather = {
   weatherDetail: undefined,
@@ -38,6 +39,17 @@ const WeatherSlice = createSlice({
     },
   },
 });
+
+const weatherDetails = (state: RootState): WeatherResponseDto | undefined =>
+  state.weather.weatherDetail;
+
+export const weatherDetailsSelector = (cityName?: string) =>
+  createSelector([weatherDetails], info => {
+    console.log('Selector:::', info);
+    console.log('Selector:::cityName', cityName);
+    if (info?.name.toLowerCase() === cityName?.toLocaleLowerCase()) return info;
+    else null;
+  });
 
 export const {
   setWeatherLoadingStatus,
